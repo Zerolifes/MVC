@@ -4,7 +4,7 @@ from setting import *
 
 class Widget:
 
-    def __init__(self, parent = 'none', name ="", pos = [0, 0], size = [0, 0], align = [Align.NONE, Align.NONE], background = "none", boderRadius = 0, hover="none"):
+    def __init__(self, parent = 'none', name ="", pos = [0, 0], size = [0, 0], align = [Align.NONE, Align.NONE], background = "none", boderRadius = 0, hover="none", display = Display.SHOW):
         self.parent = parent
         self.name = name
         self.x = pos[0]
@@ -13,6 +13,7 @@ class Widget:
         self.absy = pos[1]
         self.w = size[0]
         self.h = size[1]
+        self.display = display
         self.rect = [self.x, self.y, self.w, self.h]
         self.align = align
         if background != "none": self.background = background
@@ -30,10 +31,11 @@ class Widget:
         if self.align[0] == Align.CENTER:
             self.x = self.parent.x + (self.parent.w - self.w) // 2
         if self.align[1] == Align.CENTER:
-            self.y = self.parent.y + (self.parent.w - self.w) // 2
+            self.y = self.parent.y + (self.parent.h - self.h) // 2
         self.rect = [self.x, self.y, self.w, self.h]
 
     def draw(self, surface):
+        if self.display == Display.HIDE: return
         self.update()
         x, y = pygame.mouse.get_pos()
         if checkin(Point(x,y), self):
@@ -46,10 +48,9 @@ class Widget:
             view.draw(surface)
 
 
-    def changeView(self, views, name, object):
-        if views.name != name:
-            for view in views:
-                self.changeView(view, name, object)
-            return
-        views = object
-        print('checking')
+    def changeView(self, name, object):
+        if self.name != name:
+            for view in self.views:
+                view.changeView(name, object)
+        self = object
+

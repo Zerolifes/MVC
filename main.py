@@ -9,6 +9,7 @@ from calendarManager import CalendarManager
 # init pygame
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
+pygame.display.set_caption(CAPTION)
 
 
 # declare objects
@@ -18,15 +19,25 @@ calendarManager = CalendarManager(parent=ROOT, pos=[0, 30], size=[760,550], alig
 # application
 running = True
 while running:
+
+    # user contact
+    userContact = User.NONE
+    infor = "none"
+
     # listen user's contacts
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            userContact = User.MOUSE
+            x, y = pygame.mouse.get_pos()
+            infor = Point(x, y)
+
     # clear screen
     screen.fill(WHITE)
 
     # draw objects
-    calendarManager.draw(screen)
+    calendarManager.draw(screen, userContact=userContact, infor=infor)
 
     # display screen
     pygame.display.flip()
