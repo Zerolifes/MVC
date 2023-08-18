@@ -1,6 +1,7 @@
 # import library
 from enum import Enum
-from pygame import Color
+import tkinter as tk
+import pygame
 
 # properties of application
 CAPTION = "Medify"
@@ -62,9 +63,12 @@ class Display(Enum):
     HIDE = 0
     SHOW = 1
 
+# global function
 def checkin(point, rect):
     if rect.x <= point.x and point.x <= rect.x + rect.w and rect.y <= point.y and point.y <= rect.y+rect.h:
         return True
     else:
         return False
+
+
 

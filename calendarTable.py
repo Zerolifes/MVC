@@ -1,5 +1,6 @@
 # import library
 import datetime
+import math
 from setting import *
 from widget import Widget
 from textview import Textview
@@ -23,16 +24,16 @@ class CalendarTable(Widget):
         self.year = int(self.dateDisplay.strftime("%Y"))
         self.daysofMonth = MONTHS[self.month]
         if self.month == "Feb" and self.year % 4 == 0: self.daysofMonth = self.daysofMonth + 1
-        dateEmpty = (7 - (self.day - self.date) % 7) % 7
+        self.dateEmpty = (7 - (self.day - self.date) % 7) % 7
         dateCount = 1
-        dateLimit = dateEmpty + self.daysofMonth
+        dateLimit = self.dateEmpty + self.daysofMonth
         for i in range(6):
             for j in range(7):
                 dayDiv = Widget(parent=self, pos=[self.dayWidth*j, self.dayHeight*i], size=[self.dayWidth, self.dayHeight], hover=WHITE)
                 text = ""
                 color = SILVER
-                if dateEmpty < dateCount and dateCount <= dateLimit:
-                    text = str(dateCount - dateEmpty)
+                if self.dateEmpty < dateCount and dateCount <= dateLimit:
+                    text = str(dateCount - self.dateEmpty)
                     color = GRAY
                 dayWidget = Widget(parent=dayDiv, size=[self.dayWidth - 2, self.dayHeight - 2], background=color, align=[Align.CENTER, Align.CENTER], hover=WHITE)
                 dateCount = dateCount + 1
@@ -54,3 +55,15 @@ class CalendarTable(Widget):
     def nowMonth(self):
         self.dateDisplay = self.dateCurrent
         self.crateMonth()
+
+    def mouseListener(self, pos):
+        pos = Point(pos.x - self.x, pos.y - self.y)
+        cols = math.ceil(pos.x // self.dayWidth)
+        rows = math.ceil(pos.y // self.dayHeight)
+        day = rows * 7 + cols + 1 - self.dateEmpty
+        if not (1<=day and day<=self.daysofMonth): return False
+        self.day = day
+        month = self.dateDisplay.month
+        year = self.dateDisplay.year
+        self.dateDisplay = datetime.datetime(day=day, month=month, year=year)
+        return True

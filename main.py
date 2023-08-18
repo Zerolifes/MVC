@@ -4,8 +4,6 @@ from setting import *
 from widget import Widget
 from calendarManager import CalendarManager
 
-
-
 # init pygame
 pygame.init()
 screen = pygame.display.set_mode(WINDOW_SIZE)
@@ -28,10 +26,13 @@ while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.MOUSEBUTTONDOWN:
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == pygame.BUTTON_LEFT:
             userContact = User.MOUSE
             x, y = pygame.mouse.get_pos()
             infor = Point(x, y)
+        elif event.type == pygame.KEYDOWN:
+            userContact = User.KEYBOARD
+            infor = event.key
 
     # clear screen
     screen.fill(WHITE)
